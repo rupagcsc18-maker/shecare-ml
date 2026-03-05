@@ -1,0 +1,25 @@
+╔══════════════════════════════════════════════════════════╗
+║     MENSTRUATION TRACKER — COMPLETE SYSTEM               ║
+╠══════════════════════════════════════════════════════════╣
+║                                                          ║
+║  ML MODELS (trained on real clinical data)               ║
+║  ├── PCOS Classifier      91.82% acc  AUC 0.9588        ║
+║  └── Cycle Regressor      MAE 0.706d  94% within ±3d    ║
+║                                                          ║
+║  DETECTION ENGINE                                        ║
+║  ├── Irregular cycle detector  (7 flag types)            ║
+║  ├── Condition classifier      (PCOS, perimenopause,     ║
+║  │                              stress, endometriosis)   ║
+║  └── Adaptive predictor        (5 strategies)            ║
+║                                                          ║
+║  REST API  (FastAPI — localhost:8000)                    ║
+║  ├── POST /predict/pcos          PCOS risk + factors     ║
+║  ├── POST /predict/cycle         Next cycle length       ║
+║  ├── POST /predict/windows       All phase windows       ║
+║  ├── POST /predict/from-dates ★  Just give dates!        ║
+║  ├── POST /analyze/irregularity  Flags + conditions      ║
+║  └── GET  /health                System status           ║
+║                                                          ║
+║  TEST SUITE  ✅ 24/24 passing                            ║
+║                                                          ║
+╚══════════════════════════════════════════════════════════╝

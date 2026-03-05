@@ -1,0 +1,155 @@
+
+╔══════════════════════════════════════════════════════════╗
+║   MENSTRUATION TRACKER — FULL TRAINING & TEST PIPELINE  ║
+╚══════════════════════════════════════════════════════════╝
+
+==============================================================
+  STEP 0 — DATASET VALIDATION
+==============================================================
+  ✅ Found : PCOS_infertility.csv
+  ✅ Found : PCOS_data_without_infertility.xlsx
+  ✅ Found : FedCycleData071012.csv
+
+  All datasets present. Proceeding...
+
+==============================================================
+  STEP 1 — LOADING PCOS DATASET
+==============================================================
+  CSV shape  : (541, 6)
+  Excel shape: (541, 45)
+  After cleaning : 527 samples, 18 features
+  PCOS positive  : 173 (32.8%)
+  PCOS negative  : 354 (67.2%)
+
+==============================================================
+  STEP 2 — TRAINING PCOS CLASSIFIER (Random Forest)
+==============================================================
+  Train: 368 | Test: 159
+  Training time : 0.3s
+
+  ✅ Test Accuracy : 91.82%
+  ✅ ROC-AUC Score : 0.9588
+  ✅ CV Accuracy   : 86.90% ± 5.71%
+
+  Classification Report:
+
+                  precision    recall  f1-score   support
+    
+         No PCOS       0.93      0.95      0.94       107
+            PCOS       0.90      0.85      0.87        52
+    
+        accuracy                           0.92       159
+       macro avg       0.91      0.90      0.91       159
+    weighted avg       0.92      0.92      0.92       159
+    
+
+  Confusion Matrix:
+    TN=102  FP=5
+    FN=8  TP=44
+
+  Top 10 Feature Importances:
+    Follicle No. (R)                    ██████████████████████  0.2293
+    Follicle No. (L)                    █████████████  0.1307
+    hair growth(Y/N)                    ██████  0.0659
+    Skin darkening (Y/N)                ██████  0.0622
+    Weight gain(Y/N)                    █████  0.0557
+    BMI                                 ████  0.0469
+    AMH(ng/mL)                          ████  0.0456
+    FSH/LH                              ████  0.0446
+    Cycle length(days)                  ████  0.0400
+    FSH(mIU/mL)                         ███  0.0388
+
+  📊 Plot saved → plots/pcos_classifier_eval.png
+  📊 Plot saved → plots/pcos_feature_importance.png
+  💾 Model saved → models/pcos_classifier.pkl
+
+==============================================================
+  STEP 3 — LOADING CYCLE LENGTH DATASET
+==============================================================
+  Raw shape : (1665, 80)
+  Dropped 56 high-null columns + ClientID
+  After cleaning : 1665 samples, 22 features
+  Cycle length   : mean=28.9d  std=3.0d  range=21–37d
+
+==============================================================
+  STEP 4 — TRAINING CYCLE LENGTH REGRESSOR (XGBoost)
+==============================================================
+  Train: 1332 | Test: 333
+  Training time : 0.3s
+
+  ✅ RMSE           : 1.442 days
+  ✅ MAE            : 0.706 days
+  ✅ R² Score       : 0.7598
+  ✅ Within ±1 day  : 82.0%
+  ✅ Within ±2 days : 89.5%
+  ✅ Within ±3 days : 94.0%
+
+  Top 10 Feature Importances:
+    EstimatedDayofOvulation        ██████████████████████████  0.1789
+    TotalFertilityFormula          █████████████████  0.1150
+    LengthofLutealPhase            ██████████████  0.0962
+    TotalNumberofPeakDays          ███████████  0.0753
+    TotalHighPostPeak              █████████  0.0660
+    MensesScoreDayThree            ██████  0.0447
+    MensesScoreDayTwo              ██████  0.0439
+    MensesScoreDayFive             ██████  0.0405
+    CycleWithPeakorNot             █████  0.0390
+    FirstDayofHigh                 █████  0.0389
+
+  📊 Plot saved → plots/cycle_regressor_eval.png
+  💾 Model saved → models/cycle_length_xgb.pkl
+
+==============================================================
+  STEP 5 — SMOKE TEST (sanity check on saved models)
+==============================================================
+
+  PCOS Classifier — 5 random samples:
+  Sample   Actual     Predicted    Match
+  1        0          0            ✅
+  2        0          0            ✅
+  3        0          0            ✅
+  4        0          0            ✅
+  5        0          0            ✅
+
+  Cycle Regressor — 5 random samples:
+  Sample       Actual    Predicted Error (days)
+  1              28.0         28.1      0.1d  ✅
+  2              26.0         26.0      0.0d  ✅
+  3              31.0         30.3      0.7d  ✅
+  4              30.0         29.8      0.2d  ✅
+  5              29.0         29.1      0.1d  ✅
+
+  Load-from-disk test:
+  PCOS  loaded predictions : [0, 0, 1]
+  Cycle loaded predictions : [29.0, 27.1, 28.9]
+  ✅ Both models load and predict correctly from disk
+
+==============================================================
+  FINAL SUMMARY
+==============================================================
+
+  MODEL 1 — PCOS Classifier (Random Forest)
+    Accuracy   : 91.82%
+    ROC-AUC    : 0.9588
+    CV Accuracy: 86.90%
+
+  MODEL 2 — Cycle Length Regressor (XGBoost)
+    RMSE       : 1.442 days
+    MAE        : 0.706 days
+    R²         : 0.7598
+    Within ±1d : 82.0%
+    Within ±2d : 89.5%
+    Within ±3d : 94.0%
+
+  Smoke Test   : ✅ PASSED
+
+  Output files:
+    models/pcos_classifier.pkl
+    models/cycle_length_xgb.pkl
+    plots/pcos_classifier_eval.png
+    plots/pcos_feature_importance.png
+    plots/cycle_regressor_eval.png
+    performance_report.txt
+
+==============================================================
+  Total time: 6.1s
