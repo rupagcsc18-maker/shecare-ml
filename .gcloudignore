@@ -1,0 +1,8 @@
+data/
+tests/
+plots/
+__pycache__/
+*.ipynb
+*.csv
+*.xlsx
+.pytest_cache
