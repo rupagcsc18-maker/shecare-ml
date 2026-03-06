@@ -988,6 +988,6 @@ def get_toxicity_categories():
                     "clean":             "Safe, respectful content",
                 }.get(cat, ""),
             }
-            for cat, info in CATEGORIES.items()
+            for cat, info in CATEGORIES.items()    
         ]
     }
